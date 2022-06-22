@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
     //#inicializacion de variables globales
     var matrix = [];
     matrix["senal"] = [];
@@ -14,6 +14,7 @@ $(document).ready(function(){
         calcularSenales();
     });
 
+    //#se calcula los tipos de señales y la cantidad que se repiten
     var calcularSenales = function() {
         var datos = $("#dataInit").val();
         var splitInfo = datos.split('');
@@ -36,6 +37,8 @@ $(document).ready(function(){
         calcularProbabilidad(lengthText);
     };
 
+    
+    //#se calcula la probabilidad de cada señal
     var calcularProbabilidad = function(lengthText) {
         matrix["frecuencia"].forEach((number)=> {
             matrix["probabilidad"].push(number/lengthText);
@@ -43,6 +46,7 @@ $(document).ready(function(){
         calcularSenalTransmitida();
     };
 
+    //#se calcula cuanta señal se va ha transmitir
     var calcularSenalTransmitida = function() {
         console.log("matrix");
         console.log(matrix);
