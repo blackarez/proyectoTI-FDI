@@ -7,6 +7,7 @@ $(document).ready(function(){
     matrix["probabilidad"] = [];
     matrix["senalTransmitida"] = [];
     matrix["probabilidadSenal"] = 0;
+    senalDisponible = [];
 
     //#funcion principal
     $("button[id=exec]").click(function(){
@@ -23,11 +24,11 @@ $(document).ready(function(){
         if(this.checked) {
             $('#canalValue').val('');
             $('#canalValue').css("display", "block");
-            //$('input[id="canal"]').prop('checked', false);
+            $('#blockFinalText').css("display", "block");
         } else {
             $('#canalValue').val('');
             $('#canalValue').css("display", "none");
-            //$('input[id="canal"]').prop('checked', true);
+            $('#blockFinalText').css("display", "none");
         }
     });
     //#se calcula los tipos de señales y la cantidad que se repiten
@@ -144,12 +145,18 @@ $(document).ready(function(){
     $("button[id=cleanAll]").click(function(){
         clean();
     });
+
     var clean = function() {
         cleanMatrix();
         $("#tableData").empty();
         $("#divTable").css("display", "none");
         $("#dataH1").val("");
         $("#dataInit").val("");
+        $("#finishData").val("");
+        $('#canalValue').val("");
+        $('input[id="canal"]').prop('checked', false);
+        $('#canalValue').css("display", "none");
+        $('#blockFinalText').css("display", "none");
     };
 
     var cleanMatrix = function() {
@@ -158,10 +165,34 @@ $(document).ready(function(){
         matrix["probabilidad"] = [];
         matrix["senalTransmitida"] = [];
         matrix["probabilidadSenal"] = 0;
+        senalDisponible = [];
     };
     
     var valorarCanal = function() {
         var valorCanal = $('#canalValue').val();
+        var auxCanalActual = 0;
+        matrix["senalTransmitida"].forEach((senalTransmitidaX, index) => {
+            auxCanalActual += senalTransmitidaX;
+            if (auxCanalActual <= valorCanal) {
+                console.log("senal :" +index + " : " +matrix["senal"][index]);
+                senalDisponible.push(matrix["senal"][index]);
+            }
+        });
+        construirSeñalFinal();
+    };
 
+    var construirSeñalFinal = function() {
+        var datos = $("#dataInit").val();
+        var splitInfoFinal = datos.split('');
+        var dataFinal = "";
+        splitInfoFinal.forEach((letra) => {
+            var auxIndex = senalDisponible.indexOf(letra);
+            if (auxIndex < 0){
+                dataFinal += "-";
+            } else {
+                dataFinal += letra;
+            }
+        });
+        $("#finishData").val(dataFinal);
     };
 });
