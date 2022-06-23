@@ -5,12 +5,15 @@ $(document).ready(function(){
     matrix["senal"] = [];
     matrix["frecuencia"] = [];
     matrix["probabilidad"] = [];
-
+    matrix["senalTransmitida"] = [];
+    matrix["probabilidadSenal"] = 0;
     //#funcion principal
     $("button[id=exec]").click(function(){
         matrix["senal"] = [];
         matrix["frecuencia"] = [];
         matrix["probabilidad"] = [];
+        matrix["senalTransmitida"] = [];
+        matrix["probabilidadSenal"] = 0;
         calcularSenales();
     });
 
@@ -50,8 +53,15 @@ $(document).ready(function(){
     var calcularSenalTransmitida = function() {
         console.log("matrix");
         console.log(matrix);
+        console.log("log 2: "+ Math.log2(4));
         var datos = $("#dataInit").val();
-        $("#dataH1").val(datos);
+        matrix["probabilidad"].forEach((dataProbability) => {
+            matrix["senalTransmitida"].push(dataProbability*Math.log2(1/dataProbability));
+        });
+        matrix["senalTransmitida"].forEach((senalTransmitidaX) => {
+            matrix["probabilidadSenal"] += senalTransmitidaX;
+        });
+        $("#dataH1").val(matrix["probabilidadSenal"]);
         console.log("HOLA BOTON");
     };
 });
