@@ -10,10 +10,26 @@ $(document).ready(function(){
 
     //#funcion principal
     $("button[id=exec]").click(function(){
+
+        var datos = $("#dataInit").val();
+        console.log(datos.length);
         cleanMatrix();
-        calcularSenales();
+        if (datos.length > 0) {
+            calcularSenales();
+        }
     });
 
+    $('input[id="canal"]').change(function() {
+        if(this.checked) {
+            $('#canalValue').val('');
+            $('#canalValue').css("display", "block");
+            //$('input[id="canal"]').prop('checked', false);
+        } else {
+            $('#canalValue').val('');
+            $('#canalValue').css("display", "none");
+            //$('input[id="canal"]').prop('checked', true);
+        }
+    });
     //#se calcula los tipos de señales y la cantidad que se repiten
     var calcularSenales = function() {
         var datos = $("#dataInit").val();
@@ -35,6 +51,10 @@ $(document).ready(function(){
             }
         });
         calcularProbabilidad(lengthText);
+        if ($("#canal").is(':checked')) {
+            valorarCanal();
+        }
+        
     };
     
     //#se calcula la probabilidad de cada señal
@@ -138,5 +158,10 @@ $(document).ready(function(){
         matrix["probabilidad"] = [];
         matrix["senalTransmitida"] = [];
         matrix["probabilidadSenal"] = 0;
+    };
+    
+    var valorarCanal = function() {
+        var valorCanal = $('#canalValue').val();
+
     };
 });
