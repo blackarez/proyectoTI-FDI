@@ -7,13 +7,10 @@ $(document).ready(function(){
     matrix["probabilidad"] = [];
     matrix["senalTransmitida"] = [];
     matrix["probabilidadSenal"] = 0;
+
     //#funcion principal
     $("button[id=exec]").click(function(){
-        matrix["senal"] = [];
-        matrix["frecuencia"] = [];
-        matrix["probabilidad"] = [];
-        matrix["senalTransmitida"] = [];
-        matrix["probabilidadSenal"] = 0;
+        cleanMatrix();
         calcularSenales();
     });
 
@@ -39,7 +36,6 @@ $(document).ready(function(){
         });
         calcularProbabilidad(lengthText);
     };
-
     
     //#se calcula la probabilidad de cada señal
     var calcularProbabilidad = function(lengthText) {
@@ -62,6 +58,85 @@ $(document).ready(function(){
             matrix["probabilidadSenal"] += senalTransmitidaX;
         });
         $("#dataH1").val(matrix["probabilidadSenal"]);
-        console.log("HOLA BOTON");
+        imprimirTabla();
+    };
+
+    //#muestra los datos en la tabla
+    var imprimirTabla = function() {
+        $("#tableData").empty();
+        $("#divTable").css("display", "block");
+        var numeroSenal = matrix["senal"].length;
+        console.log("nSenal" + numeroSenal);
+        //se configura la cabecera
+        $("#tableData").append('<tr>');
+        $("#tableData").append('<th>Tipos de datos</th>');
+        for (let index = 0; index < numeroSenal; index++) {
+            $("#tableData").append('<th>S'+index+'</th>');       
+        }
+        $("#tableData").append('</tr>');
+        imprimirSenal();
+        imprimirFrecuencia();
+        imprimirProbabilidad();
+        imprimirSenalTransmitida();
+
+    };
+
+    var imprimirSenal = function() {
+        //se muestra la data
+        $("#tableData").append('<tr>');
+        $("#tableData").append('<td style="background-color: #96bef9;">Señales</td>');
+        matrix["senal"].forEach((dataItem) => {
+            $("#tableData").append('<td style="background-color: #96bef9;">'+dataItem+'</td>');       
+        });
+        $("#tableData").append('</tr>');
+    };
+
+    var imprimirFrecuencia = function() {
+        //se muestra la data
+        $("#tableData").append('<tr>');
+        $("#tableData").append('<td style="background-color: #4e93f9;">Frecuencia</td>');
+        matrix["frecuencia"].forEach((dataItem) => {
+            $("#tableData").append('<td style="background-color: #4e93f9;">'+dataItem+'</td>');       
+        });
+        $("#tableData").append('</tr>');
+    };
+
+    var imprimirProbabilidad = function() {
+        //se muestra la data
+        $("#tableData").append('<tr>');
+        $("#tableData").append('<td style="background-color: #96bef9;">Probabilidad</td>');
+        matrix["probabilidad"].forEach((dataItem) => {
+            $("#tableData").append('<td style="background-color: #96bef9;">'+dataItem+'</td>');       
+        });
+        $("#tableData").append('</tr>');
+    };
+
+    var imprimirSenalTransmitida = function() {
+        //se muestra la data
+        $("#tableData").append('<tr>');
+        $("#tableData").append('<td style="background-color: #4e93f9;">Señal Transmitida</td>');
+        matrix["senalTransmitida"].forEach((dataItem) => {
+            $("#tableData").append('<td style="background-color: #4e93f9;">'+dataItem+'</td>');       
+        });
+        $("#tableData").append('</tr>');
+    };
+
+    $("button[id=cleanAll]").click(function(){
+        clean();
+    });
+    var clean = function() {
+        cleanMatrix();
+        $("#tableData").empty();
+        $("#divTable").css("display", "none");
+        $("#dataH1").val("");
+        $("#dataInit").val("");
+    };
+
+    var cleanMatrix = function() {
+        matrix["senal"] = [];
+        matrix["frecuencia"] = [];
+        matrix["probabilidad"] = [];
+        matrix["senalTransmitida"] = [];
+        matrix["probabilidadSenal"] = 0;
     };
 });

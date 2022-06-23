@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fuentes discretas de informacion</title>
-    <link rel="stylesheet" href="styles.css" />
     <!-- CSS only -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
@@ -13,18 +12,15 @@
       integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <br />
-          <br />
           <h1>Fuentes discretas de informacion</h1>
-          <br />
           <h3>Manejo del texto</h3>
-          <br />
           <form>
             <div class="form-floating">
               <textarea
@@ -35,14 +31,15 @@
               ></textarea>
               <label for="dataInit">Texto a analizar</label>
             </div>
-            <br />
             <button type="button" class="btn btn-primary" id="exec">
               Calcular
+            </button>
+            <button type="button" class="btn btn-secondary" id="cleanAll">
+              limpiar
             </button>
           </form>
         </div>
         <div class="col-12">
-          <br/>
           <p>H(1):</p>
           <input
             type="text"
@@ -50,6 +47,13 @@
             id="dataH1"
             placeholder="Resultado"
           />
+        </div>
+        <div class="col-12" id="divTable" style="display:none;">
+          <h3>Tabla de datos</h3>
+          <div class="table table-dark table-hover table-responsive">
+            <table class="table" id="tableData">
+            </table>
+          </div>
         </div>
       </div>
     </div>
