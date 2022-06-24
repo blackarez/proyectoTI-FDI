@@ -21,4 +21,12 @@ table, th, td {
 th {
     background-color: #0d6efd;
     color: white;
+    padding: 5px;
+}
+
+#tableData tr:nth-child(2n+1)>td {
+    background-color: #96bef9;
+}
+#tableData tr:nth-child(2n)>td {
+    background-color:#4e93f9;
 }

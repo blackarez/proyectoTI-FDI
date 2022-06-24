@@ -8,32 +8,40 @@ $(document).ready(function(){
     matrix["senalTransmitida"] = [];
     matrix["probabilidadSenal"] = 0;
     senalDisponible = [];
-
+    var selection = [];
+    selection["tableData"] = $("#tableData");
+    selection["dataInit"] = $("#dataInit");
+    selection["canalValue"] = $('#canalValue');
+    selection["blockFinalText"] = $('#blockFinalText');
+    selection["divTable"] = $("#divTable");
+    selection["dataH1"] = $("#dataH1");
+    selection["finishData"] = $("#finishData");
+    selection["canal"] = $("#canal");
+    
     //#funcion principal
     $("button[id=exec]").click(function(){
-
-        var datos = $("#dataInit").val();
-        console.log(datos.length);
+        var datos = selection["dataInit"].val();
         cleanMatrix();
         if (datos.length > 0) {
             calcularSenales();
         }
     });
 
-    $('input[id="canal"]').change(function() {
+    selection["canal"].change(function() {
         if(this.checked) {
-            $('#canalValue').val('');
-            $('#canalValue').css("display", "block");
-            $('#blockFinalText').css("display", "block");
+            selection["canalValue"].val('');
+            selection["canalValue"].css("display", "block");
+            selection["blockFinalText"].css("display", "block");
         } else {
-            $('#canalValue').val('');
-            $('#canalValue').css("display", "none");
-            $('#blockFinalText').css("display", "none");
+            selection["canalValue"].val('');
+            selection["canalValue"].css("display", "none");
+            selection["blockFinalText"].css("display", "none");
         }
     });
+
     //#se calcula los tipos de señales y la cantidad que se repiten
     var calcularSenales = function() {
-        var datos = $("#dataInit").val();
+        var datos = selection["dataInit"].val();
         var splitInfo = datos.split('');
         var lengthText = splitInfo.length;
         
@@ -52,7 +60,7 @@ $(document).ready(function(){
             }
         });
         calcularProbabilidad(lengthText);
-        if ($("#canal").is(':checked')) {
+        if (selection["canal"].is(':checked')) {
             valorarCanal();
         }
         
@@ -68,95 +76,47 @@ $(document).ready(function(){
 
     //#se calcula cuanta señal se va ha transmitir
     var calcularSenalTransmitida = function() {
-        console.log("matrix");
-        console.log(matrix);
-        console.log("log 2: "+ Math.log2(4));
-        var datos = $("#dataInit").val();
+        var datos = selection["dataInit"].val();
         matrix["probabilidad"].forEach((dataProbability) => {
             matrix["senalTransmitida"].push(dataProbability*Math.log2(1/dataProbability));
         });
         matrix["senalTransmitida"].forEach((senalTransmitidaX) => {
             matrix["probabilidadSenal"] += senalTransmitidaX;
         });
-        $("#dataH1").val(matrix["probabilidadSenal"]);
+        selection["dataH1"].val(matrix["probabilidadSenal"]);
         imprimirTabla();
     };
 
     //#muestra los datos en la tabla
     var imprimirTabla = function() {
-        $("#tableData").empty();
-        $("#divTable").css("display", "block");
+        selection["tableData"].empty();
+        selection["divTable"].css("display", "block");
         var numeroSenal = matrix["senal"].length;
-        console.log("nSenal" + numeroSenal);
         //se configura la cabecera
-        $("#tableData").append('<tr>');
-        $("#tableData").append('<th>Tipos de datos</th>');
-        for (let index = 0; index < numeroSenal; index++) {
-            $("#tableData").append('<th>S'+index+'</th>');       
+        selection["tableData"].append('<tr><th># señal</th><th>Señal</th><th>Frecuencia</th><th>Probabilidad</th><th>Señal Transmitida</th></tr>');
+        //se muestra la data
+        for (let index = 0; index < matrix["senal"].length; index++) {
+            selection["tableData"].append('<tr><td>S'+index+'</td><td>'+matrix["senal"][index]+
+            '</td><td>'+matrix["frecuencia"][index]+'</td><td>'+matrix["probabilidad"][index]+
+            '</td><td>'+matrix["senalTransmitida"][index]+'</td></tr>');
         }
-        $("#tableData").append('</tr>');
-        imprimirSenal();
-        imprimirFrecuencia();
-        imprimirProbabilidad();
-        imprimirSenalTransmitida();
-
     };
 
-    var imprimirSenal = function() {
-        //se muestra la data
-        $("#tableData").append('<tr>');
-        $("#tableData").append('<td style="background-color: #96bef9;">Señales</td>');
-        matrix["senal"].forEach((dataItem) => {
-            $("#tableData").append('<td style="background-color: #96bef9;">'+dataItem+'</td>');       
-        });
-        $("#tableData").append('</tr>');
-    };
-
-    var imprimirFrecuencia = function() {
-        //se muestra la data
-        $("#tableData").append('<tr>');
-        $("#tableData").append('<td style="background-color: #4e93f9;">Frecuencia</td>');
-        matrix["frecuencia"].forEach((dataItem) => {
-            $("#tableData").append('<td style="background-color: #4e93f9;">'+dataItem+'</td>');       
-        });
-        $("#tableData").append('</tr>');
-    };
-
-    var imprimirProbabilidad = function() {
-        //se muestra la data
-        $("#tableData").append('<tr>');
-        $("#tableData").append('<td style="background-color: #96bef9;">Probabilidad</td>');
-        matrix["probabilidad"].forEach((dataItem) => {
-            $("#tableData").append('<td style="background-color: #96bef9;">'+dataItem+'</td>');       
-        });
-        $("#tableData").append('</tr>');
-    };
-
-    var imprimirSenalTransmitida = function() {
-        //se muestra la data
-        $("#tableData").append('<tr>');
-        $("#tableData").append('<td style="background-color: #4e93f9;">Señal Transmitida</td>');
-        matrix["senalTransmitida"].forEach((dataItem) => {
-            $("#tableData").append('<td style="background-color: #4e93f9;">'+dataItem+'</td>');       
-        });
-        $("#tableData").append('</tr>');
-    };
-
-    $("button[id=cleanAll]").click(function(){
+    $("#cleanAll").click(function(){
         clean();
     });
 
     var clean = function() {
         cleanMatrix();
-        $("#tableData").empty();
-        $("#divTable").css("display", "none");
-        $("#dataH1").val("");
-        $("#dataInit").val("");
-        $("#finishData").val("");
-        $('#canalValue').val("");
-        $('input[id="canal"]').prop('checked', false);
-        $('#canalValue').css("display", "none");
-        $('#blockFinalText').css("display", "none");
+        selection["tableData"].empty();
+        selection["divTable"].css("display", "none");
+        selection["dataH1"].val("");
+        selection["dataInit"].val("");
+        selection["finishData"].val("");
+        selection["canalValue"].val("");
+        selection["canal"].prop('checked', false);
+        selection["canalValue"].css("display", "none");
+        selection["blockFinalText"].css("display", "none");
     };
 
     var cleanMatrix = function() {
@@ -169,12 +129,11 @@ $(document).ready(function(){
     };
     
     var valorarCanal = function() {
-        var valorCanal = $('#canalValue').val();
+        var valorCanal = selection["canalValue"].val();
         var auxCanalActual = 0;
         matrix["senalTransmitida"].forEach((senalTransmitidaX, index) => {
             auxCanalActual += senalTransmitidaX;
             if (auxCanalActual <= valorCanal) {
-                console.log("senal :" +index + " : " +matrix["senal"][index]);
                 senalDisponible.push(matrix["senal"][index]);
             }
         });
@@ -182,7 +141,7 @@ $(document).ready(function(){
     };
 
     var construirSeñalFinal = function() {
-        var datos = $("#dataInit").val();
+        var datos = selection["dataInit"].val();
         var splitInfoFinal = datos.split('');
         var dataFinal = "";
         splitInfoFinal.forEach((letra) => {
@@ -193,6 +152,6 @@ $(document).ready(function(){
                 dataFinal += letra;
             }
         });
-        $("#finishData").val(dataFinal);
+        selection["finishData"].val(dataFinal);
     };
 });
